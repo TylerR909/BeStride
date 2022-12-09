@@ -33,5 +33,4 @@
   <Script file="Wrath\MountTable.lua"/>
   <Script file="Common\upgrade.lua"/>
   <Script file="Common\bestride.lua"/>
-  <Script file="Common\opie.lua"/>
 </Ui>

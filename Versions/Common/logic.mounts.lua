@@ -57,38 +57,7 @@ end
 function BeStride:CanUseTargetsMount()
 	if (not self:DBGet("settings.mount.copytargetmount")) then return false end
 	if (self:MovementCheck() or not UnitExists("target")) then return false end
-	if not BeStride:IsMainline() then return BeStride:CanUseTargetsMountWrath() end
 
-	local mountId = nil
-	AuraUtil.ForEachAura("target", "HELPFUL", 40, function(...)
-		local spellId = select(10, ...)
-		local spellIsMount = C_MountJournal.GetMountFromSpell(spellId)
-		if (spellIsMount) then
-			mountId = spellIsMount
-			return true -- exits ForEachAura
-		end
-	end)
-
-	if (not mountId) then return false end
-
-	local spellID, mountID, isUsable = self:isMountUsable(mountId)
+	local spellId, mountId, isUsable = self:GetKnownMountFromTarget()
 	return isUsable
-end
-
-function BeStride:CanUseTargetsMount()
-	local mountIdBySpellId = {}
-	for i=1,GetNumCompanions("MOUNT"),1 do
-		local mountID,name,spellID,icon,isSummoned = GetCompanionInfo("MOUNT", i)
-		mountIdBySpellId[spellID] = mountID
-	end
-	-- look for unit aura that matches known AND usable mount ID
-	local mountId = nil
-	for i=1,40,1 do
-		local spellId = select(10,UnitBuff("target",i))
-		if mountIdBySpellId[spellId] ~= nil then
-			return true
-		end
-	end
-
-	return false
 end
